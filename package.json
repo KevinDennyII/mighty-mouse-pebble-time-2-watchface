@@ -22,13 +22,43 @@
         "projectType": "native",
         "resources": {
             "media": [
-                {
-                    "file": "images/mighty_mouse.png",
-                    "name": "IMAGE_MIGHTY_MOUSE",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                }
-            ]
+            {
+                "file": "images/mighty_mouse.png",
+                "name": "IMAGE_MIGHTY_MOUSE",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/new_sunny.png",
+                "name": "IMAGE_WEATHER_SUNNY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/new_cloudy.png",
+                "name": "IMAGE_WEATHER_CLOUDY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/new_rainy.png",
+                "name": "IMAGE_WEATHER_RAINY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/new_snowy.png",
+                "name": "IMAGE_WEATHER_SNOWY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/new_unknown.png",
+                "name": "IMAGE_WEATHER_UNKNOWN",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            }
+        ]
         },
         "sdkVersion": "3",
         "targetPlatforms": [

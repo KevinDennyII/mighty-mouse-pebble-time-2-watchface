@@ -3,7 +3,9 @@
 // --- Layer Declarations ---
 static Window *s_main_window;
 static BitmapLayer *s_background_layer, *s_icon_layer;
+static BitmapLayer *s_steps_icon_layer, *s_hr_icon_layer, *s_battery_icon_layer;
 static GBitmap *s_background_bitmap, *s_icon_bitmap;
+static GBitmap *s_steps_icon_bitmap, *s_hr_icon_bitmap, *s_battery_icon_bitmap;
 
 // Text layers for the "outlined text" effect
 static TextLayer *s_time_layer_outline, *s_time_layer_text;
@@ -128,25 +130,39 @@ static void main_window_load(Window *window) {
   create_outlined_text(&s_date_layer_outline, &s_date_layer_text, GRect(0, 115, bounds.size.w, 30), FONT_KEY_GOTHIC_24_BOLD, GTextAlignmentCenter, window_layer);
 
   // Weather Text (Top)
-  create_outlined_text(&s_weather_layer_outline, &s_weather_layer_text, GRect(0, 8, bounds.size.w, 25), FONT_KEY_GOTHIC_18_BOLD, GTextAlignmentCenter, window_layer);
+  create_outlined_text(&s_weather_layer_outline, &s_weather_layer_text, GRect(0, 8, 160, 32), FONT_KEY_GOTHIC_18_BOLD, GTextAlignmentRight, window_layer);
   update_outlined_text(s_weather_layer_outline, s_weather_layer_text, "Loading...");
   
   // Weather Icon
-  s_icon_layer = bitmap_layer_create(GRect(0, 32, bounds.size.w, 30));
+  s_icon_layer = bitmap_layer_create(GRect(164, 5, 32, 32));
   bitmap_layer_set_background_color(s_icon_layer, GColorClear);
   bitmap_layer_set_compositing_mode(s_icon_layer, GCompOpSet);
-  bitmap_layer_set_alignment(s_icon_layer, GAlignCenter);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_icon_layer));
 
-  // Trackers (Bottom)
-  if (persist_read_bool(MESSAGE_KEY_KEY_SHOW_STEPS)) {
-    create_outlined_text(&s_steps_layer_outline, &s_steps_layer_text, GRect(5, bounds.size.h - 28, bounds.size.w, 25), FONT_KEY_GOTHIC_18, GTextAlignmentLeft, window_layer);
+  // Trackers (Bottom) - Show by default, hide if explicitly set to false
+  if (!persist_exists(MESSAGE_KEY_KEY_SHOW_STEPS) || persist_read_bool(MESSAGE_KEY_KEY_SHOW_STEPS)) {
+    s_steps_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ICON_STEPS);
+    s_steps_icon_layer = bitmap_layer_create(GRect(5, bounds.size.h - 28, 24, 24));
+    bitmap_layer_set_compositing_mode(s_steps_icon_layer, GCompOpSet);
+    bitmap_layer_set_bitmap(s_steps_icon_layer, s_steps_icon_bitmap);
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_steps_icon_layer));
+    create_outlined_text(&s_steps_layer_outline, &s_steps_layer_text, GRect(30, bounds.size.h - 28, bounds.size.w - 35, 25), FONT_KEY_GOTHIC_18, GTextAlignmentLeft, window_layer);
   }
-  if (persist_read_bool(MESSAGE_KEY_KEY_SHOW_HEART_RATE)) {
-    create_outlined_text(&s_hr_layer_outline, &s_hr_layer_text, GRect(-5, bounds.size.h - 28, bounds.size.w, 25), FONT_KEY_GOTHIC_18, GTextAlignmentRight, window_layer);
+  if (!persist_exists(MESSAGE_KEY_KEY_SHOW_HEART_RATE) || persist_read_bool(MESSAGE_KEY_KEY_SHOW_HEART_RATE)) {
+    s_hr_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ICON_HEART);
+    s_hr_icon_layer = bitmap_layer_create(GRect(bounds.size.w - 60, bounds.size.h - 28, 24, 24));
+    bitmap_layer_set_compositing_mode(s_hr_icon_layer, GCompOpSet);
+    bitmap_layer_set_bitmap(s_hr_icon_layer, s_hr_icon_bitmap);
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_hr_icon_layer));
+    create_outlined_text(&s_hr_layer_outline, &s_hr_layer_text, GRect(0, bounds.size.h - 28, bounds.size.w - 65, 25), FONT_KEY_GOTHIC_18, GTextAlignmentRight, window_layer);
   }
-  if (persist_read_bool(MESSAGE_KEY_KEY_SHOW_BATTERY)) {
-    create_outlined_text(&s_battery_layer_outline, &s_battery_layer_text, GRect(0, 145, bounds.size.w, 25), FONT_KEY_GOTHIC_18_BOLD, GTextAlignmentCenter, window_layer);
+  if (!persist_exists(MESSAGE_KEY_KEY_SHOW_BATTERY) || persist_read_bool(MESSAGE_KEY_KEY_SHOW_BATTERY)) {
+    s_battery_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ICON_BATTERY);
+    s_battery_icon_layer = bitmap_layer_create(GRect(bounds.size.w/2 - 40, 145, 24, 24));
+    bitmap_layer_set_compositing_mode(s_battery_icon_layer, GCompOpSet);
+    bitmap_layer_set_bitmap(s_battery_icon_layer, s_battery_icon_bitmap);
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_battery_icon_layer));
+    create_outlined_text(&s_battery_layer_outline, &s_battery_layer_text, GRect(bounds.size.w/2 - 15, 145, 50, 25), FONT_KEY_GOTHIC_18_BOLD, GTextAlignmentLeft, window_layer);
   }
   
   // Get initial state
@@ -177,6 +193,13 @@ static void main_window_unload(Window *window) {
   
   if(s_icon_bitmap) { gbitmap_destroy(s_icon_bitmap); }
   bitmap_layer_destroy(s_icon_layer);
+
+  if(s_steps_icon_bitmap) { gbitmap_destroy(s_steps_icon_bitmap); }
+  if(s_steps_icon_layer) { bitmap_layer_destroy(s_steps_icon_layer); }
+  if(s_hr_icon_bitmap) { gbitmap_destroy(s_hr_icon_bitmap); }
+  if(s_hr_icon_layer) { bitmap_layer_destroy(s_hr_icon_layer); }
+  if(s_battery_icon_bitmap) { gbitmap_destroy(s_battery_icon_bitmap); }
+  if(s_battery_icon_layer) { bitmap_layer_destroy(s_battery_icon_layer); }
 }
 
 // --- Init and Deinit ---

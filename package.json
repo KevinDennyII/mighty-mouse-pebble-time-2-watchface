@@ -1,0 +1,43 @@
+{
+    "author": "MakeAwesomeHappen",
+    "dependencies": {},
+    "keywords": [
+        "pebble-app"
+    ],
+    "name": "mighty-mouse-pebble-time-2-watchface",
+    "pebble": {
+        "capabilities": [
+            "location",
+            "health"
+        ],
+        "displayName": "mighty-mouse-pebble-time-2-watchface",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "KEY_TEMPERATURE",
+            "KEY_CONDITIONS",
+            "KEY_SHOW_HEART_RATE",
+            "KEY_SHOW_STEPS",
+            "KEY_SHOW_BATTERY"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/mighty_mouse.png",
+                    "name": "IMAGE_MIGHTY_MOUSE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "emery"
+        ],
+        "uuid": "5f53b0a1-0bc1-4ab9-a686-65bcac67fe2b",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}

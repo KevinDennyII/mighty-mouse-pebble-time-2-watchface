@@ -95,15 +95,15 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 
     char *conditions = cond_tuple->value->cstring;
     if (strstr(conditions, "Sun") != NULL || strstr(conditions, "Clear") != NULL) {
-      s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_SUNNY);
+      s_icon_bitmap = gbitmap_create_with_resource(IMAGE_WEATHER_SUNNY);
     } else if (strstr(conditions, "Cloud") != NULL) {
-      s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_CLOUDY);
+      s_icon_bitmap = gbitmap_create_with_resource(IMAGE_WEATHER_CLOUDY);
     } else if (strstr(conditions, "Rain") != NULL) {
-      s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_RAINY);
+      s_icon_bitmap = gbitmap_create_with_resource(IMAGE_WEATHER_RAINY);
     } else if (strstr(conditions, "Snow") != NULL) {
-      s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_SNOWY);
+      s_icon_bitmap = gbitmap_create_with_resource(IMAGE_WEATHER_SNOWY);
     } else {
-      s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_UNKNOWN);
+      s_icon_bitmap = gbitmap_create_with_resource(IMAGE_WEATHER_UNKNOWN);
     }
     bitmap_layer_set_bitmap(s_icon_layer, s_icon_bitmap);
   }
@@ -116,7 +116,7 @@ static void main_window_load(Window *window) {
   GRect bounds = layer_get_bounds(window_layer);
 
   // Background
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MIGHTY_MOUSE);
+  s_background_bitmap = gbitmap_create_with_resource(IMAGE_MIGHTY_MOUSE);
   s_background_layer = bitmap_layer_create(bounds);
   bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));

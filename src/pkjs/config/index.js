@@ -18,6 +18,12 @@ module.exports = [
       },
       {
         "type": "toggle",
+        "messageKey": "KEY_SHOW_MIGHTY_MOUSE",
+        "label": "Show Mighty Mouse",
+        "defaultValue": true
+      },
+      {
+        "type": "toggle",
         "messageKey": "KEY_SHOW_STEPS",
         "label": "Show Steps",
         "defaultValue": true

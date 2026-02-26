@@ -17,7 +17,8 @@
             "KEY_CONDITIONS",
             "KEY_SHOW_HEART_RATE",
             "KEY_SHOW_STEPS",
-            "KEY_SHOW_BATTERY"
+            "KEY_SHOW_BATTERY",
+            "KEY_SHOW_MIGHTY_MOUSE"
         ],
         "projectType": "native",
         "resources": {

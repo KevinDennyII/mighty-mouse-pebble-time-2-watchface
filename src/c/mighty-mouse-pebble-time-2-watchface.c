@@ -109,6 +109,14 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     }
     bitmap_layer_set_bitmap(s_icon_layer, s_icon_bitmap);
   }
+
+  Tuple *show_mighty_mouse_tuple = dict_find(iterator, MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE);
+  if(show_mighty_mouse_tuple) {
+    persist_write_bool(MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE, show_mighty_mouse_tuple->value->int32 == 1);
+    // Reload the window
+    window_stack_remove(s_main_window, false);
+    window_stack_push(s_main_window, true);
+  }
 }
 
 // --- Window Load and Unload ---
@@ -117,11 +125,16 @@ static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
+  // Set background color to Superman Blue
+  window_set_background_color(window, GColorFromHEX(0x0050D8));
+
   // Background
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MIGHTY_MOUSE);
-  s_background_layer = bitmap_layer_create(bounds);
-  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
+  if (!persist_exists(MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE) || persist_read_bool(MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE)) {
+    s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MIGHTY_MOUSE);
+    s_background_layer = bitmap_layer_create(bounds);
+    bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
+  }
 
   // Time (Large, centered)
   create_outlined_text(&s_time_layer_outline, &s_time_layer_text, GRect(0, 68, bounds.size.w, 50), FONT_KEY_LECO_42_NUMBERS, GTextAlignmentCenter, window_layer);
@@ -188,8 +201,8 @@ static void main_window_unload(Window *window) {
   if(s_battery_layer_text) { text_layer_destroy(s_battery_layer_text); }
   if(s_battery_layer_outline) { text_layer_destroy(s_battery_layer_outline); }
   
-  gbitmap_destroy(s_background_bitmap);
-  bitmap_layer_destroy(s_background_layer);
+  if(s_background_bitmap) { gbitmap_destroy(s_background_bitmap); }
+  if(s_background_layer) { bitmap_layer_destroy(s_background_layer); }
   
   if(s_icon_bitmap) { gbitmap_destroy(s_icon_bitmap); }
   bitmap_layer_destroy(s_icon_layer);

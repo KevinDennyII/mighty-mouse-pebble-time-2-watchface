@@ -84,14 +84,31 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  if (s_icon_bitmap) {
-    gbitmap_destroy(s_icon_bitmap);
+  bool needs_reload = false;
+
+  // Settings
+  Tuple *show_mighty_mouse_tuple = dict_find(iterator, MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE);
+  if(show_mighty_mouse_tuple) {
+    persist_write_bool(MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE, show_mighty_mouse_tuple->value->int32 == 1);
+    needs_reload = true;
+  }
+  
+  // other settings would go here
+
+  if(needs_reload) {
+    // Reload the window to apply changes
+    window_stack_remove(s_main_window, false);
+    window_stack_push(s_main_window, true);
+    return; // return early to avoid processing weather data unnecessarily
   }
 
+  // Weather
   Tuple *temp_tuple = dict_find(iterator, MESSAGE_KEY_KEY_TEMPERATURE);
   Tuple *cond_tuple = dict_find(iterator, MESSAGE_KEY_KEY_CONDITIONS);
-
   if (temp_tuple && cond_tuple) {
+    if (s_icon_bitmap) {
+      gbitmap_destroy(s_icon_bitmap);
+    }
     snprintf(s_weather_buffer, sizeof(s_weather_buffer), "%s, %s", temp_tuple->value->cstring, cond_tuple->value->cstring);
     update_outlined_text(s_weather_layer_outline, s_weather_layer_text, s_weather_buffer);
 
@@ -108,14 +125,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WEATHER_UNKNOWN);
     }
     bitmap_layer_set_bitmap(s_icon_layer, s_icon_bitmap);
-  }
-
-  Tuple *show_mighty_mouse_tuple = dict_find(iterator, MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE);
-  if(show_mighty_mouse_tuple) {
-    persist_write_bool(MESSAGE_KEY_KEY_SHOW_MIGHTY_MOUSE, show_mighty_mouse_tuple->value->int32 == 1);
-    // Reload the window
-    window_stack_remove(s_main_window, false);
-    window_stack_push(s_main_window, true);
   }
 }
 
